@@ -1,0 +1,57 @@
+@import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css);
+
+@media (prefers-color-scheme: light) {
+  body{
+    background-color: #ffffff;
+    color:#000000;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body{
+    background-color: #000000;
+    color:#ffffff;
+  }
+}
+
+body{
+margin:0 !important;
+text-align:center;
+font-family:'NanumSquare', sans-serif;
+}
+div{
+position: absolute;
+align-content: center;
+vertical-align: center;
+transition-timing-function: ease;
+transition-duration: 0.2s;
+}
+
+.clock_main, .clock_date{
+width: 100%;
+top:30%;
+}
+.clock_main{
+  font-size:48pt;
+  font-weight:300;
+}
+.clock_main span{
+
+}
+.clock_date{
+  font-size:20pt;
+  font-weight:100;
+  padding-top: 3.5em;
+}
+
+/* 세로 화면 */
+@media screen and (max-width:800px){
+  .clock_main{
+    font-size:36pt;
+  }
+  .clock_date{
+    font-size:16pt;
+  }
+}
+
+/* 가로 화면 */
