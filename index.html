@@ -3,15 +3,17 @@
 <head>
 <meta charset="utf-8"/>
 <link rel="stylesheet" href="master.css">
-<script src="app.js" charset="utf-8"></script>
-<title>벽시계</title>
+<title id="clockTitle">00:00:00</title>
 </head>
 <body>
-<div class="clock_main">
-<span id="hh"></span>:<span id="mm"></span>:<span id="ss"></span>
+<div><!--메인 화면-->
+<span id="clockTime" class="clock_time">00:00:00</span><br>
+<span id="clockDate" class="clock_date"></span><br>
+<span id="weather" class="weather">위치 권한을 허용해 주세요</span>
 </div>
-<div class="clock_date">
-<span id="year"></span>년 <span id="month"></span>월 <span id="date"></span>일 (<span id="week"></span>)
-</div>
+<!--<a href=""><img src="icons/" alt="설정"></a>-->
 </body>
+<script src="cityname_to_ko/index.js" charset="utf-8"></script>
+<script src="clock.js" charset="utf-8"></script>
+<script src="weather.js" charset="utf-8"></script>
 </html>

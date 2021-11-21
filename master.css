@@ -21,37 +21,40 @@ font-family:'NanumSquare', sans-serif;
 }
 div{
 position: absolute;
+width:100%; height:auto;
+margin:0; top:25%;
 align-content: center;
-vertical-align: center;
 transition-timing-function: ease;
 transition-duration: 0.2s;
 }
 
-.clock_main, .clock_date{
-width: 100%;
-top:30%;
+.clock_time, .clock_date, .weather{
+  position:relative;
+  align-content:center;
 }
-.clock_main{
-  font-size:48pt;
+.clock_time{
+  font-size:64px;
   font-weight:300;
 }
-.clock_main span{
-
-}
 .clock_date{
-  font-size:20pt;
+  font-size:28px;
   font-weight:100;
-  padding-top: 3.5em;
+  top:10px;
+}
+.weather{
+  font-size:24px;
+  font-weight:500;
+  top:20px;
+}
+.weather img{
+  position: relative;
+  top:5px;
+  height:26px;
+}
+.font-grey{
+  color:grey;
 }
 
 /* 세로 화면 */
-@media screen and (max-width:800px){
-  .clock_main{
-    font-size:36pt;
-  }
-  .clock_date{
-    font-size:16pt;
-  }
-}
 
 /* 가로 화면 */
