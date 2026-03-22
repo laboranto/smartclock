@@ -1,5 +1,5 @@
 const weather = document.querySelector("#weather");
-const API_KEY = "너의 API 코드";
+const API_KEY = "나의 API 키";
 import kpop from "cityname_to_ko/package.json";
 
 // 현재 위치 확인. '에이전트_신원_정보.위치.현재위치_가져오기(성공,실패)'
@@ -40,8 +40,7 @@ function onGeoError() {
 
 //onGeoOk를 30분에 한 번 새로고침
 function initWeather() {
-  onGeoOk();
-  setInterval(1800000);
+  setInterval(onGeoOk, 1800000);
 }
 
 initWeather();
