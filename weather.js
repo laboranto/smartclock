@@ -1,46 +1,74 @@
 const weather = document.querySelector("#weather");
-const API_KEY = "나의 API 키";
-import kpop from "cityname_to_ko/package.json";
 
-// 현재 위치 확인. '에이전트_신원_정보.위치.현재위치_가져오기(성공,실패)'
 navigator.geolocation.getCurrentPosition(onGeoOk, onGeoError);
 
-// 위치 조회에 성공했을 때 날씨 불러오기
-function onGeoOk(position) {
-  const ns = position.coords.latitude;
-  const we = position.coords.longitude;
-  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lang=kr&lat=${ns}&lon=${we}&appid=${API_KEY}&units=metric`;
-  // openweathermap에서 불러온 API 정보에서 const 선언
-  fetch(apiUrl)
-    .then((response) => response.json())
-    .then((data) => {
-      const cityRomanized = data.name;
-      const city = kpop.hangulify(cityRomanized);
-      // const city = data.name;
-      const currentWeather = data.weather[0].icon;
-      const currentWeatherAlt = data.weather[0].description;
-      const currentTemp = data.main.temp;
-      const currentTempInt = currentTemp - (currentTemp % 1);
-      weather.innerText = "";
-      weather.insertAdjacentHTML(
-        "afterbegin",
-        `${city}, <img src="icons/weather/${currentWeather}.svg" alt="${currentWeatherAlt}"> ${currentTempInt}°C`
-      );
-    });
+function wmoToIcon(code, isDay) {
+  const s = isDay ? 'd' : 'n';
+  if (code === 0)  return `01${s}`;
+  if (code <= 2)   return `02${s}`;
+  if (code === 3)  return `04${s}`;
+  if (code <= 48)  return `50${s}`;
+  if (code <= 55)  return `09${s}`;
+  if (code <= 67)  return `10${s}`;
+  if (code <= 77)  return `13${s}`;
+  if (code <= 82)  return `09${s}`;
+  if (code <= 86)  return `13${s}`;
+  return `11${s}`;
 }
 
-// 위치 조회를 실패했을 때 함수
-function onGeoError() {
-  weather.innerText = "";
-  weather.insertAdjacentHTML(
-    "afterbegin",
-    `<span class="font-grey">날씨 정보를 불러오지 못했습니다</span>`
-  );
+function wmoDesc(code) {
+  if (code === 0)  return '맑음';
+  if (code <= 2)   return '구름 조금';
+  if (code === 3)  return '흐림';
+  if (code <= 48)  return '안개';
+  if (code <= 55)  return '이슬비';
+  if (code <= 67)  return '비';
+  if (code <= 77)  return '눈';
+  if (code <= 82)  return '소나기';
+  if (code <= 86)  return '눈 소나기';
+  return '뇌우';
 }
 
-//onGeoOk를 30분에 한 번 새로고침
-function initWeather() {
-  setInterval(onGeoOk, 1800000);
+async function onGeoOk(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  try {
+    const [weatherRes, geoRes] = await Promise.all([
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&timezone=auto`),
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`, {
+        headers: { 'Accept-Language': 'ko' }
+      })
+    ]);
+
+    const wData = await weatherRes.json();
+    const gData = await geoRes.json();
+
+    const cur  = wData.current;
+    const temp = Math.floor(cur.temperature_2m);
+    const icon = wmoToIcon(cur.weather_code, cur.is_day);
+    const desc = wmoDesc(cur.weather_code);
+    const city = gData.address?.city || gData.address?.town ||
+                 gData.address?.village || gData.address?.county || '';
+
+    weather.innerHTML =
+      `${city}, <img src="icons/weather/${icon}.svg" alt="${desc}"> ${temp}°C`;
+  } catch {
+    onGeoError();
+  }
 }
 
-initWeather();
+async function onGeoError() {
+  try {
+    const res  = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
+    await onGeoOk({ coords: { latitude: data.latitude, longitude: data.longitude } });
+  } catch {
+    weather.innerHTML = `<span class="font-grey">날씨 정보를 불러오지 못했습니다</span>`;
+  }
+}
+
+setInterval(
+  () => navigator.geolocation.getCurrentPosition(onGeoOk, onGeoError),
+  1800000
+);
