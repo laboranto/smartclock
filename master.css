@@ -44,7 +44,7 @@ transition-duration: 0.2s;
 .weather{
   font-size:24px;
   font-weight:500;
-  top:20px;
+  top:50px;
 }
 .weather img{
   position: relative;
@@ -53,6 +53,8 @@ transition-duration: 0.2s;
 }
 .font-grey{
   color:grey;
+  font-size:16px;
+  font-weight:300;
 }
 
 /* 세로 화면 */

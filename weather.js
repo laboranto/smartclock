@@ -1,6 +1,7 @@
 const weather = document.querySelector("#weather");
 
-navigator.geolocation.getCurrentPosition(onGeoOk, onGeoError);
+onGeoError();
+navigator.geolocation.getCurrentPosition(onGeoOk, () => {});
 
 function wmoToIcon(code, isDay) {
   const s = isDay ? 'd' : 'n';
